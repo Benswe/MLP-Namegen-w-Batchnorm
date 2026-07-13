@@ -2,6 +2,7 @@ import torch
 import torch.nn.functional as F
 import random
 import matplotlib.pyplot as plt
+from nn import Linear, tanh, BatchNorm1d
 # set up the data
 words = open('names.txt', 'r').read().splitlines()
 
@@ -86,7 +87,8 @@ for i in range(max_steps):
     lossi.append(loss.item())
     stepi.append(i)
     
-# for testing end loss 
+# for testing loss 
+@torch.no_grad()
 def test_splits(split):
     x, y = {
         "train": (xtr, ytr),
@@ -103,3 +105,27 @@ def test_splits(split):
 test_splits("train")   
 test_splits("val")
 test_splits("test") 
+
+# sample from the model
+
+for _ in range(20):
+    out = []
+    context = [0] * context_size
+    while True:
+        
+        # one example at a time
+        emb = C[context]
+        emb = emb.view(1, -1)
+        act = torch.tanh(emb @ W1 + b1)
+        logits = act @ W2 + b2
+        probs = F.softmax(logits)
+        ix = torch.multinomial(probs, num_samples=1).item()
+
+        char = itos[ix]
+        out.append(char)
+
+        if char == '.':
+            break
+        context = context[1:] + [ix]
+
+    print(''.join(out))

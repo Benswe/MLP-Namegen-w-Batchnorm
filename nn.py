@@ -14,10 +14,10 @@ class Linear:
         return [self.weight] + ([] if self.bias is  None else [self.bias])       
 
 
-class tanh:
+class Tanh:
     def __call__(self, x):
         return torch.tanh(x)
-    def parameters():
+    def parameters(self):
         return []
 
 
@@ -42,7 +42,7 @@ class BatchNorm1d:
             xmean = self.running_mean
             xvar = self.running_var
         xhat = (x - xmean)/(xvar + self.eps)**0.5 
-        self.out = self.gamma + self.beta
+        self.out = self.gamma * xhat + self.beta
         # if training update the buffers 
         if self.training:
             with torch.no_grad():

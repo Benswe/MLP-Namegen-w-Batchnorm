@@ -1,5 +1,3 @@
-# MLP-Namegen-w-Batchnorm
-
 # MLP Name Generator with BatchNorm
 
 A character-level neural network that learns to generate names using a multilayer perceptron (MLP) with custom batch normalization layers.
